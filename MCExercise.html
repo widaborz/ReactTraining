@@ -1,0 +1,187 @@
+
+<!-- Matteo Canzari React Execise -->
+<html>
+<head>
+<title>React Hello World</title>
+
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+</head>
+<body>
+
+	<div id = "root"></div>
+	<div id = "clockIta"></div>
+	<div id = "memberIta"></div>
+	<div id = "clockUK"></div>
+	<div id = "memberUK"></div>
+	<div id = "clockIndia"></div>
+	<div id = "memberIndia"></div>
+	<div id = "button"></div>
+
+<script type="text/babel">
+
+	var members = [
+	{id: 1, name: "Matteo", surname: "Canzari", city: "Teramo", institute: "INAF", country: "Italy", role: "developer"}, 
+	{id: 2, name: "Valentina", surname: "Alberti", city: "Trieste", institute: "INAF", country: "Italy", role: "scrum master"}, 
+	{id: 3, name: "Snehal", surname: "Valame", city: "Pune", institute: "Persistent", country: "India", role: "developer"}, 
+	{id: 4, name: "Joe", surname: "Barret", city: "Edimburgh", institute: "UKATC", country: "England", role: "developer"}, 
+	{id: 5, name: "Mark", surname: "Nicol", city: "Edimburgh", institute: "UKATC", country: "England", role: "developer"}, 
+	{id: 6, name: "Pamela", surname: "Klaassen", city: "Edimburgh", institute: "UKATC", country: "England", role: "product owner"}, 
+	{id: 7, name: "Ralph", surname: "Braddock", city: "Manchester", institute: "UKATC", country: "England", role: "developer"}
+	]; 
+
+	//CLOCK
+	const clockElement = document.getElementById('clock');
+
+	function NameMembers(props){
+		return (
+			props.members.map((member) =>
+				<span key = {member.id}>
+					  &nbsp;{member.name}
+				</span>
+				)
+			); 
+	}
+
+	class Clock extends React.Component {
+		constructor(props){
+			super(props);
+			this.state = {date: new Date()}; 
+			this.options = { timeZone: this.props.timeZone, timeZoneName: 'long' };
+			this.members = this.props.members;
+		}
+
+
+		
+		componentDidMount() {
+		    this.timerID = setInterval(
+		      () => this.tick(),
+		      1000
+		    );
+		}
+
+		componentWillUnmount() {
+		    clearInterval(this.timerID);
+		}
+
+		tick() {
+		  	this.setState({
+		  	date: new Date()
+		  });
+		}
+
+		
+
+		render(){
+		    return (
+		      <div>
+		        <h2>Hello 
+		       	 <NameMembers members = {this.members} />
+		        ({this.options.timeZone})
+		        </h2>
+		        <h4>It is {this.state.date.toLocaleTimeString("en-US", this.options)}. </h4>
+		      </div>
+		    );
+		}
+	}
+
+
+	  ReactDOM.render(
+	    <Clock timeZone = "Europe/London" members = {members.filter(function (memb) {return memb.country == "England"})}/>,
+	    document.getElementById('clockUK')
+	  );
+
+	  ReactDOM.render(
+	    <Clock timeZone = "Europe/Rome" members = {members.filter(function (memb) {return memb.country == "Italy"})}/>,
+	    document.getElementById('clockIta')
+	  );
+
+	  ReactDOM.render(
+	    <Clock timeZone = "Asia/Colombo" members = {members.filter(function (memb) {return memb.country == "India"})}/>,
+	    document.getElementById('clockIndia')
+	  );
+
+
+
+
+	//HELLO
+	function SayHello(props){
+		return <div><h1>Hello! {props.name}</h1></div>; 
+	}
+
+	ReactDOM.render(<SayHello name = "OSO-UI Team" />, document.getElementById('root')); 
+
+	//MEMBERS
+	function MemberList(props) {
+			const members = props.members; 
+			return (
+				<ul>
+				{members.map((member) =>
+						<li key = "{member.id}">
+							{member.surname}, {member.name} ({member.role}) - {member.institute} ({member.city} - {member.country})
+						</li>
+					)}
+				</ul>
+			);
+		}
+
+	class Members extends React.Component {
+		constructor(props) {
+			super(props); 
+			this.state = {display: false}; 
+	    	this.members = props.members;
+
+			this.showMembers = this.showMembers.bind(this); 
+		}
+
+		showMembers(members, e){
+			this.setState(state => ({
+				display: !state.display
+			}));
+		}
+
+		render(){
+			var membersListDisplay; 
+			if(this.state.display)
+				membersListDisplay = <MemberList members = {this.members} />; 
+
+			return(
+				<div>
+					{membersListDisplay}
+					<button onClick = {(e) => this.showMembers(this.members, e)}> 
+						{this.state.display ? 'Hide members details' : 'Show members details'}
+					</button>
+				</div>
+			);
+		}
+	}
+
+	
+
+	ReactDOM.render(
+		<Members members = {members.filter(function (memb) {return memb.country == "Italy"})} />,
+		document.getElementById("memberIta")
+		); 
+	ReactDOM.render(
+		<Members members = {members.filter(function (memb) {return memb.country == "India"})} />,
+		document.getElementById("memberIndia")
+		); 
+	ReactDOM.render(
+		<Members members = {members.filter(function (memb) {return memb.country == "England"})} />,
+		document.getElementById("memberUK")
+		); 
+
+		
+
+
+
+
+
+
+</script>
+</body>
+</html>
