@@ -31,10 +31,10 @@
 	{id: 1, name: "Matteo", surname: "Canzari", city: "Teramo", institute: "INAF", country: "Italy", role: "developer"}, 
 	{id: 2, name: "Valentina", surname: "Alberti", city: "Trieste", institute: "INAF", country: "Italy", role: "scrum master"}, 
 	{id: 3, name: "Snehal", surname: "Valame", city: "Pune", institute: "Persistent", country: "India", role: "developer"}, 
-	{id: 4, name: "Joe", surname: "Barret", city: "Edimburgh", institute: "UKATC", country: "England", role: "developer"}, 
-	{id: 5, name: "Mark", surname: "Nicol", city: "Edimburgh", institute: "UKATC", country: "England", role: "developer"}, 
-	{id: 6, name: "Pamela", surname: "Klaassen", city: "Edimburgh", institute: "UKATC", country: "England", role: "product owner"}, 
-	{id: 7, name: "Ralph", surname: "Braddock", city: "Manchester", institute: "UKATC", country: "England", role: "developer"}
+	{id: 4, name: "Joe", surname: "Barret", city: "Edimburgh", institute: "UKATC", country: "UK", role: "developer"}, 
+	{id: 5, name: "Mark", surname: "Nicol", city: "Edimburgh", institute: "UKATC", country: "UK", role: "developer"}, 
+	{id: 6, name: "Pamela", surname: "Klaassen", city: "Edimburgh", institute: "UKATC", country: "UK", role: "product owner"}, 
+	{id: 7, name: "Ralph", surname: "Braddock", city: "Manchester", institute: "UKATC", country: "UK", role: "developer"}
 	]; 
 
 	//CLOCK
@@ -94,7 +94,7 @@
 
 
 	  ReactDOM.render(
-	    <Clock timeZone = "Europe/London" country = "England"/>,
+	    <Clock timeZone = "Europe/London" country = "UK"/>,
 	    document.getElementById('clockUK')
 	  );
 
@@ -199,7 +199,7 @@
 	    console.log(event.target.nome.value); 
 		this.setState({value: ''}); 
 	    event.preventDefault();
-	    	var newMember = {id: 10, name: event.target.nome.value, surname: event.target.surname.value, city: "", institute: "", country: event.target.country.value, role: "developer"}
+	    	var newMember = {name: event.target.nome.value, surname: event.target.surname.value, city: "", institute: event.target.institute.value, country: event.target.country.value, role: "developer"}
 	members.push(newMember); 
 
 	  }
@@ -215,6 +215,10 @@
 	        <label>
 	          Surname:
 	          <input type="text" name = "surname"value={this.state.surname}  onChange={this.handleChange}/>
+	        </label>
+	         <label>
+	          institute:
+	          <input type="text" name = "institute"value={this.state.institute}  onChange={this.handleChange}/>
 	        </label>
 	        <label>
 	          Country:
