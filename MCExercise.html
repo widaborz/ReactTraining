@@ -21,6 +21,9 @@
 	<div id = "clockIndia"></div>
 	<div id = "memberIndia"></div>
 	<div id = "button"></div>
+	<hr />
+	<div id = "form"></div>
+	<div id = "textarea"></div>
 
 <script type="text/babel">
 
@@ -39,7 +42,7 @@
 
 	function NameMembers(props){
 		return (
-			props.members.map((member) =>
+			members.filter(function (memb) {return memb.country == props.country}).map((member) =>
 				<span key = {member.id}>
 					  &nbsp;{member.name}
 				</span>
@@ -50,9 +53,9 @@
 	class Clock extends React.Component {
 		constructor(props){
 			super(props);
-			this.state = {date: new Date()}; 
+			this.state = {date: new Date(), members: this.props.members}; 
 			this.options = { timeZone: this.props.timeZone, timeZoneName: 'long' };
-			this.members = this.props.members;
+			this.country = props.country;
 		}
 
 
@@ -80,7 +83,7 @@
 		    return (
 		      <div>
 		        <h2>Hello 
-		       	 <NameMembers members = {this.members} />
+		       	 <NameMembers country = {this.country} />
 		        ({this.options.timeZone})
 		        </h2>
 		        <h4>It is {this.state.date.toLocaleTimeString("en-US", this.options)}. </h4>
@@ -91,17 +94,17 @@
 
 
 	  ReactDOM.render(
-	    <Clock timeZone = "Europe/London" members = {members.filter(function (memb) {return memb.country == "England"})}/>,
+	    <Clock timeZone = "Europe/London" country = "England"/>,
 	    document.getElementById('clockUK')
 	  );
 
 	  ReactDOM.render(
-	    <Clock timeZone = "Europe/Rome" members = {members.filter(function (memb) {return memb.country == "Italy"})}/>,
+	    <Clock timeZone = "Europe/Rome" country = "Italy"/>,
 	    document.getElementById('clockIta')
 	  );
 
 	  ReactDOM.render(
-	    <Clock timeZone = "Asia/Colombo" members = {members.filter(function (memb) {return memb.country == "India"})}/>,
+	    <Clock timeZone = "Asia/Colombo" country = "India"/>,
 	    document.getElementById('clockIndia')
 	  );
 
@@ -117,10 +120,10 @@
 
 	//MEMBERS
 	function MemberList(props) {
-			const members = props.members; 
+		console.log(props); 
 			return (
 				<ul>
-				{members.map((member) =>
+				{members.filter(function (memb) {return memb.country == props.country}).map((member) =>
 						<li key = "{member.id}">
 							{member.surname}, {member.name} ({member.role}) - {member.institute} ({member.city} - {member.country})
 						</li>
@@ -133,7 +136,7 @@
 		constructor(props) {
 			super(props); 
 			this.state = {display: false}; 
-	    	this.members = props.members;
+	    	this.country = props.country;
 
 			this.showMembers = this.showMembers.bind(this); 
 		}
@@ -147,7 +150,7 @@
 		render(){
 			var membersListDisplay; 
 			if(this.state.display)
-				membersListDisplay = <MemberList members = {this.members} />; 
+				membersListDisplay = <MemberList country = {this.country} />; 
 
 			return(
 				<div>
@@ -163,21 +166,79 @@
 	
 
 	ReactDOM.render(
-		<Members members = {members.filter(function (memb) {return memb.country == "Italy"})} />,
+		<Members country = "Italy"/>,
 		document.getElementById("memberIta")
 		); 
 	ReactDOM.render(
-		<Members members = {members.filter(function (memb) {return memb.country == "India"})} />,
+		<Members country = "India"/>,
 		document.getElementById("memberIndia")
 		); 
 	ReactDOM.render(
-		<Members members = {members.filter(function (memb) {return memb.country == "England"})} />,
+		<Members country = "UK" />,
 		document.getElementById("memberUK")
 		); 
 
-		
+
+	//FORM
+	class NameForm extends React.Component {
+	  constructor(props) {
+	    super(props);
+	    this.state = {nome: '', surname: '', country: ''};
+
+	    this.handleChange = this.handleChange.bind(this);
+	    this.handleSubmit = this.handleSubmit.bind(this);
+	  }
+
+	  handleChange(event) {
+	  	console.log(event); 
+	    this.setState({nome: event.target.nome, surname: event.target.surname, country: event.target.country});
+	  }
+
+	  handleSubmit(event) {
+	    alert('Added ' + event.target.nome.value + ' in the team!');
+	    console.log(event.target.nome.value); 
+		this.setState({value: ''}); 
+	    event.preventDefault();
+	    	var newMember = {id: 10, name: event.target.nome.value, surname: event.target.surname.value, city: "", institute: "", country: event.target.country.value, role: "developer"}
+	members.push(newMember); 
+
+	  }
+
+	  render() {
+	    return (
+	    	<div><h4>Add a new developer in the team</h4>
+	      <form onSubmit={this.handleSubmit}>
+	        <label>
+	          Name:
+	          <input type="text" name = "nome" value={this.state.name}  onChange={this.handleChange}/>
+	        </label>
+	        <label>
+	          Surname:
+	          <input type="text" name = "surname"value={this.state.surname}  onChange={this.handleChange}/>
+	        </label>
+	        <label>
+	          Country:
+	          <select name = "country" value={this.state.country} onChange={this.handleChange}>
+	            <option value="Italy">Italy</option>
+	            <option value="India">India</option>
+	            <option value="UK">UK</option>
+	          </select>
+	        </label>
+	        <input type="submit" value="Submit" />
+	      </form>
+	      </div>
+	    );
+	  }
+	}	
 
 
+	ReactDOM.render(
+		<NameForm />, 
+		document.getElementById('form')
+		); 
+
+	
+	
 
 
 
